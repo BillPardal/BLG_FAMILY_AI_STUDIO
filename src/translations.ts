@@ -1,0 +1,67 @@
+import { Language } from './types';
+
+export const UI_TRANSLATIONS: Record<string, Record<Language, string>> = {
+  inicio: { PT: 'Início', EN: 'Home', ITA: 'Inizio' },
+  tempo: { PT: 'Tempo', EN: 'Time', ITA: 'Tempo' },
+  historia: { PT: 'História', EN: 'History', ITA: 'Storia' },
+  arvore: { PT: 'Árvore', EN: 'Tree', ITA: 'Albero' },
+  membros: { PT: 'Membros', EN: 'Members', ITA: 'Membri' },
+  galeria: { PT: 'Galeria', EN: 'Gallery', ITA: 'Galleria' },
+  biografias: { PT: 'Biografias', EN: 'Biographies', ITA: 'Biografie' },
+  contato: { PT: 'Contato', EN: 'Contact', ITA: 'Contatti' },
+  family_name: { PT: 'Família Colautto', EN: 'Colautto Family', ITA: 'Famiglia Colautto' },
+  footer_tagline: { PT: 'Preservando a história, honrando o passado.', EN: 'Preserving history, honoring the past.', ITA: 'Preservare la storia, onorare il passato.' },
+  explore_history: { PT: 'Explorar Nossa História', EN: 'Explore Our History', ITA: 'Esplora la Nostra Storia' },
+  welcome_title: { PT: 'Bem-vindo ao Arquivo da Família Colautto', EN: 'Welcome to the Colautto Family Archive', ITA: 'Benvenuti nell\'Archivio della Famiglia Colautto' },
+  welcome_subtitle: { PT: 'Um espaço dedicado a preservar e compartilhar a herança, as memórias e a jornada da nossa família.', EN: 'A space dedicated to preserving and sharing the heritage, memories, and journey of our family.', ITA: 'Uno spazio dedicato a preservare e condividere l\'eredità, le memorie e il cammino della nostra famiglia.' },
+  italy: { PT: 'ITÁLIA', EN: 'ITALY', ITA: 'ITALIA' },
+  brazil: { PT: 'BRASIL', EN: 'BRAZIL', ITA: 'BRASILE' },
+  featured_biographies: { PT: 'Biografias em Destaque', EN: 'Featured Biographies', ITA: 'Biografie in Primo Piano' },
+  no_featured_biographies: { PT: 'Nenhuma biografia em destaque no momento.', EN: 'No featured biographies at the moment.', ITA: 'Nessuna biografia in primo piano al momento.' },
+  origins_legacy: { PT: 'ORIGINS & LEGADO', EN: 'ORIGINS & LEGACY', ITA: 'ORIGINI & LEGATO' },
+  journey_generations: { PT: 'Uma jornada através das gerações', EN: 'A journey through generations', ITA: 'Un viaggio attraverso le generazioni' },
+  origins_veneto: { PT: 'As Origens no Veneto', EN: 'Origins in Veneto', ITA: 'Le Origini nel Veneto' },
+  origins_veneto_desc: { 
+    PT: 'Nossos antepassados partiram de "Portogruaro" da região do Veneto, na Itália, em um período de grandes transformações na Europa. Deixaram para trás suas vilas e tradições centenárias para enfrentar o desconhecido mar em busca de dignidade.',
+    EN: 'Our ancestors departed from "Portogruaro" in the Veneto region of Italy, during a period of great transformations in Europe. They left behind their villages and centuries-old traditions to face the unknown sea in search of dignity.',
+    ITA: 'I nostri antenati partirono da "Portogruaro" nella regione del Veneto, in Italia, in un periodo di grandi trasformazioni in Europa. Si lasciarono alle spalle i loro villaggi e tradizioni secolari per affrontare il mare ignoto in cerca di dignità.'
+  },
+  arrival_brazil: { PT: 'A Chegada ao Brasil', EN: 'Arrival in Brazil', ITA: 'L\'Arrivo in Brasile' },
+  arrival_brazil_desc: {
+    PT: 'Em busca de novas oportunidades, a família desembarcou no Porto de Santos e estabeleceu raízes profundas no solo brasileiro. Do trabalho árduo nas lavouras ao crescimento nas cidades, cada geração Colautto contribuiu para o progresso desta nova pátria.',
+    EN: 'In search of new opportunities, the family disembarked at the Port of Santos and established deep roots in Brazilian soil. From hard work in the fields to growth in the cities, each Colautto generation contributed to the progress of this new homeland.',
+    ITA: 'In cerca di nuove opportunità, la famiglia sbarcò al Porto di Santos e stabilì radici profonde nel suolo brasiliano. Dal duro lavoro nei campi alla crescita nelle città, ogni generazione Colautto ha contribuito al progresso di questa nuova patria.'
+  },
+  honoring_past_quote: {
+    PT: 'Honrar o passado é a fundação sobre a qual construímos o futuro da nossa linhagem.',
+    EN: 'Honoring the past is the foundation upon which we build the future of our lineage.',
+    ITA: 'Onorare il passato è la fondazione su cui costruiamo il futuro della nostra stirpe.'
+  },
+  select_member_tree: { PT: 'Selecione um membro na árvore.', EN: 'Select a member on the tree.', ITA: 'Seleziona un membro sull\'albero.' },
+  family_members_title: { PT: 'Membros da Família', EN: 'Family Members', ITA: 'Membri della Famiglia' },
+  family_members_subtitle: { PT: 'Conheça as pessoas que fazem parte da nossa história.', EN: 'Meet the people who are part of our history.', ITA: 'Incontra le persone che fanno parte della nostra storia.' },
+  spouse: { PT: 'Cônjuge', EN: 'Spouse', ITA: 'Coniuge' },
+  gallery_title: { PT: 'Galeria de Fotos', EN: 'Photo Gallery', ITA: 'Galleria Fotografica' },
+  gallery_subtitle: { PT: 'Momentos eternizados através das gerações da família Colautto.', EN: 'Moments eternalized through the generations of the Colautto family.', ITA: 'Momenti eternizzati attraverso le generazioni della famiglia Colautto.' },
+  load_more: { PT: 'Carregar Mais', EN: 'Load More', ITA: 'Carica Altro' },
+  biographies_desc: { PT: 'A história de vida daqueles que construíram nosso legado.', EN: 'The life story of those who built our legacy.', ITA: 'La storia della vita di coloro che hanno costruito la nostra eredità.' },
+  contact_title: { PT: 'Entre em Contato', EN: 'Get in Touch', ITA: 'Contattaci' },
+  contact_subtitle: { PT: 'Para dúvidas, sugestões ou compartilhamento de materiais históricos.', EN: 'For questions, suggestions, or sharing historical materials.', ITA: 'Per domande, suggerimenti o condivisione di materiali storici.' },
+  location: { PT: 'Localização', EN: 'Location', ITA: 'Posizione' },
+  official_email: { PT: 'E-mail Oficial', EN: 'Official Email', ITA: 'Email Ufficiale' },
+  origins: { PT: 'Origens', EN: 'Origins', ITA: 'Origini' },
+  our_legacy: { PT: 'Nosso Legado', EN: 'Our Legacy', ITA: 'La Nostra Eredità' },
+  legacy_desc: {
+    PT: 'O arquivo da Família Colautto é mantido por voluntários dedicados à preservação da nossa história. Se você possui fotos antigas, documentos de imigração ou histórias que merecem ser contadas, por favor, entre em contato conosco.',
+    EN: 'The Colautto Family archive is maintained by volunteers dedicated to preserving our history. If you have old photos, immigration documents, or stories that deserve to be told, please contact us.',
+    ITA: 'L\'archivio della Famiglia Colautto è gestito da volontari dediti alla conservazione della nostra storia. Se hai vecchie foto, documenti di immigrazione o storie che meritano di essere raccontate, contattaci.'
+  },
+  roots: { PT: 'Raízes', EN: 'Roots', ITA: 'Radici' },
+  patriarchs: { PT: 'PATRIARCAS', EN: 'PATRIARCHS', ITA: 'PATRIARCHI' },
+  all: { PT: 'TODOS', EN: 'ALL', ITA: 'TUTTI' },
+  people: { PT: 'PESSOAS', EN: 'PEOPLE', ITA: 'PERSONE' },
+  events: { PT: 'EVENTOS', EN: 'EVENTS', ITA: 'EVENTI' },
+  documents: { PT: 'DOCUMENTOS', EN: 'DOCUMENTS', ITA: 'DOCUMENTI' },
+  local: { PT: 'LOCAL', EN: 'PLACE', ITA: 'LUOGO' },
+  meet_author: { PT: 'Conheça o autor deste blog', EN: 'Meet the blog author', ITA: 'Incontra l\'autore del blog' },
+};

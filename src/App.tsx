@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BookOpen, 
@@ -13,6 +13,7 @@ import {
   Mail, 
   Globe, 
   ChevronRight, 
+  ChevronLeft,
   Search, 
   Maximize2,
   Users,
@@ -22,10 +23,11 @@ import {
   X,
   Heart
 } from 'lucide-react';
-import { Section, Member, HistoryEvent, GalleryItem, Meeting } from './types';
+import { Section, Member, HistoryEvent, GalleryItem, Meeting, Language } from './types';
 import { MEMBERS, HISTORY, GALLERY, MEETINGS } from './constants';
+import { UI_TRANSLATIONS } from './translations';
 
-const Navbar = ({ activeSection, setSection }: { activeSection: Section, setSection: (s: Section) => void }) => {
+const Navbar = ({ activeSection, setSection, language, setLanguage }: { activeSection: Section, setSection: (s: Section) => void, language: Language, setLanguage: (l: Language) => void }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -36,18 +38,24 @@ const Navbar = ({ activeSection, setSection }: { activeSection: Section, setSect
   }, []);
 
   const navItems: { id: Section; label: string }[] = [
-    { id: 'inicio', label: 'Início' },
-    { id: 'tempo', label: 'Tempo' },
-    { id: 'historia', label: 'História' },
-    { id: 'arvore', label: 'Árvore' },
-    { id: 'membros', label: 'Membros' },
-    { id: 'galeria', label: 'Galeria' },
-    { id: 'encontros', label: 'Encontros' },
-    { id: 'contato', label: 'Contato' },
+    { id: 'inicio', label: UI_TRANSLATIONS.inicio[language] },
+    { id: 'tempo', label: UI_TRANSLATIONS.tempo[language] },
+    { id: 'historia', label: UI_TRANSLATIONS.historia[language] },
+    { id: 'arvore', label: UI_TRANSLATIONS.arvore[language] },
+    { id: 'membros', label: UI_TRANSLATIONS.membros[language] },
+    { id: 'galeria', label: UI_TRANSLATIONS.galeria[language] },
+    { id: 'biografias', label: UI_TRANSLATIONS.biografias[language] },
+    { id: 'contato', label: UI_TRANSLATIONS.contato[language] },
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-2' : 'bg-transparent py-4'}`}>
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled || activeSection !== 'inicio' ? 'bg-white shadow-sm py-[13px]' : 'bg-transparent py-[25px]'}`}>
+      <div className="absolute top-0 left-0 w-full h-1 flex">
+        <div className="h-full flex-1 bg-brand-green"></div>
+        <div className="h-full flex-1 bg-brand-red"></div>
+        <div className="h-full flex-1 bg-brand-green"></div>
+        <div className="h-full flex-1 bg-brand-yellow"></div>
+      </div>
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
         <div className="flex items-center gap-3 cursor-pointer" onClick={() => setSection('inicio')}>
           <div className="w-12 h-12 flex items-center justify-center">
@@ -58,10 +66,10 @@ const Navbar = ({ activeSection, setSection }: { activeSection: Section, setSect
             </svg>
           </div>
           <div>
-            <h1 className="font-serif font-bold text-lg leading-tight">Família Colautto</h1>
-            <div className="flex items-center gap-1 text-[10px] text-gray-500 font-medium">
+            <h1 className="font-serif font-bold text-[20px] leading-tight">{UI_TRANSLATIONS.family_name[language]}</h1>
+            <div className="flex items-center gap-2 text-[11px] text-gray-400 font-bold tracking-widest">
               <span>1860</span>
-              <div className="flex gap-0.5">
+              <div className="flex gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-brand-green"></div>
                 <div className="w-1.5 h-1.5 rounded-full bg-brand-yellow"></div>
               </div>
@@ -70,23 +78,31 @@ const Navbar = ({ activeSection, setSection }: { activeSection: Section, setSect
         </div>
 
         {/* Desktop Nav */}
-        <div className="hidden lg:flex items-center gap-6">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setSection(item.id)}
-              className={`text-sm font-medium transition-colors relative py-1 ${activeSection === item.id ? 'text-brand-dark' : 'text-gray-500 hover:text-brand-dark'}`}
-            >
-              {item.label}
-              {activeSection === item.id && (
-                <motion.div layoutId="nav-underline" className="absolute bottom-0 left-0 w-full h-0.5 bg-brand-dark" />
-              )}
-            </button>
-          ))}
-          <div className="flex items-center gap-2 ml-4">
-            <button className="px-2 py-1 bg-brand-dark text-white text-[10px] font-bold rounded">PT</button>
-            <button className="px-2 py-1 text-gray-500 text-[10px] font-bold hover:text-brand-dark">EN</button>
-            <button className="px-2 py-1 text-gray-500 text-[10px] font-bold hover:text-brand-dark">ITA</button>
+        <div className="hidden lg:flex items-center gap-8">
+          <div className="flex items-center gap-6">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setSection(item.id)}
+                className={`text-[12px] font-bold uppercase tracking-wider transition-colors relative py-1 ${activeSection === item.id ? 'text-brand-dark' : 'text-gray-400 hover:text-brand-dark'}`}
+              >
+                {item.label}
+                {activeSection === item.id && (
+                  <motion.div layoutId="nav-underline" className="absolute -bottom-1 left-0 w-full h-0.5 bg-brand-dark" />
+                )}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center bg-brand-dark rounded p-0.5 ml-4">
+            {(['PT', 'EN', 'ITA'] as Language[]).map((lang) => (
+              <button
+                key={lang}
+                onClick={() => setLanguage(lang)}
+                className={`px-2 py-1 text-[10px] font-bold rounded-sm transition-colors ${language === lang ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white'}`}
+              >
+                {lang}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -103,7 +119,7 @@ const Navbar = ({ activeSection, setSection }: { activeSection: Section, setSect
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="lg:hidden absolute top-full left-0 w-full bg-white shadow-xl py-4 flex flex-col items-center gap-4"
+            className="lg:hidden absolute top-full left-0 w-full bg-white shadow-xl py-[18px] flex flex-col items-center gap-4"
           >
             {navItems.map((item) => (
               <button
@@ -112,11 +128,25 @@ const Navbar = ({ activeSection, setSection }: { activeSection: Section, setSect
                   setSection(item.id);
                   setIsMobileMenuOpen(false);
                 }}
-                className={`text-lg font-medium ${activeSection === item.id ? 'text-brand-green' : 'text-gray-600'}`}
+                className={`text-[20px] font-medium ${activeSection === item.id ? 'text-brand-green' : 'text-gray-600'}`}
               >
                 {item.label}
               </button>
             ))}
+            <div className="flex items-center bg-brand-dark rounded p-1 mt-4">
+              {(['PT', 'EN', 'ITA'] as Language[]).map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => {
+                    setLanguage(lang);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`px-4 py-2 text-[14px] font-bold rounded-sm transition-colors ${language === lang ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white'}`}
+                >
+                  {lang}
+                </button>
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -124,27 +154,47 @@ const Navbar = ({ activeSection, setSection }: { activeSection: Section, setSect
   );
 };
 
-const Footer = () => (
-  <footer className="bg-brand-dark text-white py-12">
+const Footer = ({ language }: { language: Language }) => (
+  <footer className="bg-brand-dark text-white py-8">
     <div className="max-w-7xl mx-auto px-4">
-      <div className="flex flex-col items-center text-center gap-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 flex items-center justify-center">
-            <svg viewBox="0 0 100 100" className="w-full h-full opacity-80">
-              <path d="M50 5L15 20V50C15 70 50 95 50 95C50 95 85 70 85 50V20L50 5Z" fill="#FDFCF0" stroke="#E5E1D8" strokeWidth="1"/>
-              <text x="22" y="62" fill="#008C45" fontFamily="serif" fontWeight="bold" fontSize="38">C</text>
-              <text x="52" y="62" fill="#CD212A" fontFamily="serif" fontWeight="bold" fontSize="38">L</text>
-            </svg>
+      <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="flex flex-col items-center md:items-start text-center md:text-left gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 flex items-center justify-center">
+              <svg viewBox="0 0 100 100" className="w-full h-full opacity-80">
+                <path d="M50 5L15 20V50C15 70 50 95 50 95C50 95 85 70 85 50V20L50 5Z" fill="#FDFCF0" stroke="#E5E1D8" strokeWidth="1"/>
+                <text x="22" y="62" fill="#008C45" fontFamily="serif" fontWeight="bold" fontSize="38">C</text>
+                <text x="52" y="62" fill="#CD212A" fontFamily="serif" fontWeight="bold" fontSize="38">L</text>
+              </svg>
+            </div>
+            <h2 className="font-serif font-bold text-xl">{UI_TRANSLATIONS.family_name[language]}</h2>
           </div>
-          <h2 className="font-serif font-bold text-xl">Família Colautto</h2>
+          <p className="text-gray-400 text-sm max-w-md">
+            {UI_TRANSLATIONS.footer_tagline[language]}
+          </p>
+          <div className="flex flex-col md:flex-row justify-between w-full items-center gap-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold mt-4">
+            <span>© 2026 {UI_TRANSLATIONS.family_name[language]}.</span>
+            <button className="hover:text-white transition-colors">ADMIN</button>
+          </div>
         </div>
-        <p className="text-gray-400 text-sm max-w-md">
-          Preservando a história, honrando o passado.
-        </p>
-        <div className="w-full h-px bg-white/10 my-4"></div>
-        <div className="flex flex-col md:flex-row justify-between w-full items-center gap-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold">
-          <span>© 2026 Família Colautto.</span>
-          <button className="hover:text-white transition-colors">ADMIN</button>
+
+        <div className="flex flex-col items-center gap-3">
+          <a 
+            href="https://produto.mercadolivre.com.br/MLB-6311123284-livro-impossivel-entre-sonhos-e-realizacoes-lutti-colautto-_JM"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block group cursor-pointer transition-transform hover:scale-105"
+          >
+            <img 
+              src="https://lh3.googleusercontent.com/d/1XXaYwJkGxZwImuGKEvVCwQcnXVd88_Le" 
+              alt="Book Seal" 
+              className="h-48 w-auto object-contain bg-transparent mix-blend-screen"
+              referrerPolicy="no-referrer"
+            />
+          </a>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 text-center">
+            {UI_TRANSLATIONS.meet_author[language]}
+          </span>
         </div>
       </div>
     </div>
@@ -165,37 +215,39 @@ const SectionHeader = ({ title, subtitle, badge }: { title: string, subtitle?: s
   </div>
 );
 
-const Inicio = ({ setSection }: { setSection: (s: Section) => void }) => (
+const Inicio = ({ setSection, language }: { setSection: (s: Section) => void, language: Language }) => (
   <div className="pt-20">
     {/* Hero Section */}
     <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 z-0">
         <img 
-          src="https://lh3.googleusercontent.com/d/1GXJ0sFgJdT9zmCkN2Nzjz4XSzK3EpkJh" 
-          alt="Família Colautto" 
+          src="https://lh3.googleusercontent.com/d/1WyVxRRV-G6MHpyIMeNXG6DDaOxy1QHTv" 
+          alt={UI_TRANSLATIONS.family_name[language]} 
           className="w-full h-full object-cover"
           referrerPolicy="no-referrer"
         />
+        <div className="absolute inset-0 bg-black/60"></div>
       </div>
       
       <div className="relative z-10 text-center px-4 max-w-4xl">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-dark/80 backdrop-blur-sm text-white rounded-full text-[10px] font-bold uppercase tracking-widest mb-8">
-          <span className="text-brand-green">ITÁLIA</span>
-          <span className="opacity-30">—</span>
-          <span className="text-brand-yellow">BRASIL</span>
-          <div className="w-1.5 h-1.5 rounded-full bg-brand-yellow ml-1"></div>
+        <div className="inline-flex items-center gap-3 px-5 py-2 bg-brand-dark/90 backdrop-blur-md text-white rounded-full text-[11px] font-bold uppercase tracking-[0.2em] mb-10 border border-white/10 shadow-lg">
+          <div className="w-2 h-2 rounded-full bg-brand-green shadow-[0_0_8px_rgba(0,140,69,0.6)]"></div>
+          <span className="font-serif">{UI_TRANSLATIONS.italy[language]}</span>
+          <span className="opacity-40 mx-1">—</span>
+          <span className="font-serif">{UI_TRANSLATIONS.brazil[language]}</span>
+          <div className="w-2 h-2 rounded-full bg-brand-yellow shadow-[0_0_8px_rgba(255,204,0,0.6)]"></div>
         </div>
         <h1 className="font-serif text-4xl md:text-6xl font-bold mb-8 leading-tight text-white drop-shadow-lg">
-          Bem-vindo ao Arquivo da Família Colautto
+          {UI_TRANSLATIONS.welcome_title[language]}
         </h1>
-        <p className="text-xl text-white mb-10 italic font-bold drop-shadow-md">
-          Um espaço dedicado a preservar e compartilhar a herança, as memórias e a jornada da nossa família.
+        <p className="text-[22px] text-white mb-10 italic font-bold drop-shadow-md">
+          {UI_TRANSLATIONS.welcome_subtitle[language]}
         </p>
         <button 
           onClick={() => setSection('tempo')}
-          className="px-12 py-4 bg-white text-brand-dark rounded-full font-bold text-[10px] uppercase tracking-[0.3em] hover:bg-brand-dark hover:text-white transition-all flex items-center gap-3 mx-auto shadow-xl"
+          className="px-[56px] py-[18px] bg-white text-brand-dark rounded-full font-bold text-[11px] uppercase tracking-[0.3em] hover:bg-brand-dark hover:text-white transition-all flex items-center gap-3 mx-auto shadow-xl"
         >
-          Explorar Nossa História <span className="text-lg">→</span>
+          {UI_TRANSLATIONS.explore_history[language]} <span className="text-lg">→</span>
         </button>
       </div>
     </section>
@@ -204,9 +256,9 @@ const Inicio = ({ setSection }: { setSection: (s: Section) => void }) => (
     <section className="max-w-7xl mx-auto px-4 py-20">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
-          { id: 'arvore', label: 'Árvore', icon: <BookOpen size={32} />, color: 'bg-white' },
-          { id: 'galeria', label: 'Galeria', icon: <ImageIcon size={32} />, color: 'bg-white' },
-          { id: 'encontros', label: 'Encontros', icon: <Calendar size={32} />, color: 'bg-white' },
+          { id: 'arvore', label: UI_TRANSLATIONS.arvore[language], icon: <History size={32} />, color: 'bg-white' },
+          { id: 'galeria', label: UI_TRANSLATIONS.galeria[language], icon: <ImageIcon size={32} />, color: 'bg-white' },
+          { id: 'biografias', label: UI_TRANSLATIONS.biografias[language], icon: <BookOpen size={32} />, color: 'bg-white' },
         ].map((item) => (
           <motion.div
             key={item.id}
@@ -223,65 +275,71 @@ const Inicio = ({ setSection }: { setSection: (s: Section) => void }) => (
       </div>
     </section>
 
-    {/* Next Meetings */}
+    {/* Next Biographies */}
     <section className="bg-white py-24">
       <div className="max-w-7xl mx-auto px-4 text-center">
         <div className="flex items-center justify-center gap-3 mb-8">
-          <Calendar size={20} className="text-gray-400" />
-          <h2 className="font-serif text-3xl font-bold">Próximos Encontros</h2>
+          <BookOpen size={20} className="text-gray-400" />
+          <h2 className="font-serif text-3xl font-bold">{UI_TRANSLATIONS.featured_biographies[language]}</h2>
         </div>
         <div className="w-1/2 h-px bg-gray-100 mx-auto mb-12"></div>
-        <p className="text-gray-400 italic">Nenhum encontro agendado.</p>
+        <p className="text-gray-400 italic">{UI_TRANSLATIONS.no_featured_biographies[language]}</p>
       </div>
     </section>
   </div>
 );
 
-const Tempo = () => (
-  <div className="pt-32 pb-24">
-    <SectionHeader 
-      badge="Origens & Legado"
-      title="Tempo"
-      subtitle="Uma jornada através das gerações"
-    />
+const Tempo = ({ language }: { language: Language }) => (
+  <div className="pb-24">
+    {/* Dark Header Section */}
+    <div className="bg-brand-dark pt-24 pb-20 text-center text-white">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="inline-flex items-center gap-3 mb-6">
+          <div className="w-1.5 h-1.5 rounded-full bg-brand-green"></div>
+          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/60">{UI_TRANSLATIONS.origins_legacy[language]}</span>
+          <div className="w-1.5 h-1.5 rounded-full bg-brand-yellow"></div>
+        </div>
+        <h2 className="font-serif text-6xl md:text-7xl font-normal mb-6">{UI_TRANSLATIONS.tempo[language]}</h2>
+        <p className="text-white/60 italic text-lg">{UI_TRANSLATIONS.journey_generations[language]}</p>
+      </div>
+    </div>
     
-    <div className="max-w-4xl mx-auto px-4">
-      <div className="bg-white rounded-[40px] p-8 md:p-16 shadow-xl mb-12">
+    <div className="max-w-4xl mx-auto px-4 -mt-[61px] relative z-10">
+      <div className="bg-white rounded-[40px] p-8 md:p-16 shadow-2xl mb-12">
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-1 h-8 bg-brand-green rounded-full"></div>
-          <h3 className="font-serif text-3xl font-bold">As Origens no Veneto</h3>
+          <div className="w-1.5 h-8 bg-brand-green rounded-full"></div>
+          <h3 className="font-serif text-3xl font-bold">{UI_TRANSLATIONS.origins_veneto[language]}</h3>
         </div>
         <p className="text-gray-600 mb-12 leading-relaxed">
-          Nossos antepassados partiram de "Portogruaro" da região do Veneto, na Itália, em um período de grandes transformações na Europa. Deixaram para trás suas vilas e tradições centenárias para enfrentar o desconhecido mar em busca de dignidade.
+          {UI_TRANSLATIONS.origins_veneto_desc[language]}
         </p>
-        <div className="relative rounded-3xl overflow-hidden mb-12 shadow-inner">
+        <div className="relative mb-12">
           <img 
-            src="https://picsum.photos/seed/map-veneto/1200/800?grayscale" 
-            alt="Mapa Veneto" 
-            className="w-full aspect-video object-cover"
+            src="https://lh3.googleusercontent.com/d/1ohahC06Un6ol5zqkCpQkE_pD2HY1eMDZ" 
+            alt={UI_TRANSLATIONS.origins_veneto[language]} 
+            className="w-full h-auto grayscale hover:grayscale-0 transition-all duration-700 cursor-pointer rounded-xl"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 border-[20px] border-white/20 pointer-events-none"></div>
         </div>
         <blockquote className="border-l-4 border-gray-200 pl-8 py-4 italic text-2xl text-gray-500 font-serif relative">
           <span className="absolute -left-4 -top-4 text-6xl text-gray-100 opacity-50">“</span>
-          “Honrar o passado é a fundação sobre a qual construímos o futuro da nossa linhagem.”
+          {UI_TRANSLATIONS.honoring_past_quote[language]}
         </blockquote>
       </div>
 
       <div className="bg-white rounded-[40px] p-8 md:p-16 shadow-xl">
         <div className="flex items-center gap-3 mb-8">
           <div className="w-1 h-8 bg-brand-yellow rounded-full"></div>
-          <h3 className="font-serif text-3xl font-bold">A Chegada ao Brasil</h3>
+          <h3 className="font-serif text-3xl font-bold">{UI_TRANSLATIONS.arrival_brazil[language]}</h3>
         </div>
         <p className="text-gray-600 mb-12 leading-relaxed">
-          Em busca de novas oportunidades, a família desembarcou no Porto de Santos e estabeleceu raízes profundas no solo brasileiro. Do trabalho árduo nas lavouras ao crescimento nas cidades, cada geração Colautto contribuiu para o progresso desta nova pátria.
+          {UI_TRANSLATIONS.arrival_brazil_desc[language]}
         </p>
-        <div className="relative rounded-3xl overflow-hidden mb-16 shadow-lg">
+        <div className="relative mb-16 flex justify-center">
           <img 
-            src="https://picsum.photos/seed/arrival/800/1200?grayscale" 
-            alt="Chegada ao Brasil" 
-            className="w-full object-cover"
+            src="https://lh3.googleusercontent.com/d/1EBg5PcidfwaGcPlFxjKCMfm8yf9anstM" 
+            alt={UI_TRANSLATIONS.arrival_brazil[language]} 
+            className="w-4/5 h-auto grayscale hover:grayscale-0 transition-all duration-700 cursor-pointer rounded-xl"
             referrerPolicy="no-referrer"
           />
         </div>
@@ -289,14 +347,14 @@ const Tempo = () => (
         {/* Timeline dots */}
         <div className="space-y-12 relative before:absolute before:left-[7px] before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-100">
           {[
-            { year: '1895', title: 'Partida de Gênova', color: 'bg-brand-green' },
-            { year: '1895', title: 'Chegada ao Porto de Santos', color: 'bg-brand-yellow', badge: 'CHEGADA AO BRASIL' },
-            { year: '1920', title: 'Estabelecimento no Interior (Botucatu - SP)', color: 'bg-brand-green' },
-            { year: '1932', title: 'A vida na Roça - adaptação ao país (Sítio Boa Vista - Botucatu - SP)', color: 'bg-brand-dark' },
-            { year: '1931 - 1950', title: 'Criação da Família - Filhos - (Sítio Bela Vista - Botucatu - SP)', color: 'bg-brand-dark' },
-            { year: '1960', title: 'Novos Rumos - continuidade da família (São Paulo - Capital)', color: 'bg-brand-red' },
-            { year: '2007', title: 'Retorno às Origens (Visita à Itália - Porto Gruaro)', color: 'bg-gray-400' },
-            { year: '2024', title: 'Preservação do Legado Digital (Documentos e digitalização de nossa história)', color: 'bg-brand-green' },
+            { year: '1895', title: language === 'PT' ? 'Partida de Gênova' : language === 'EN' ? 'Departure from Genoa' : 'Partenza da Genova', color: 'bg-brand-green' },
+            { year: '1895', title: language === 'PT' ? 'Chegada ao Porto de Santos' : language === 'EN' ? 'Arrival at the Port of Santos' : 'Arrivo al Porto di Santos', color: 'bg-brand-yellow', badge: UI_TRANSLATIONS.arrival_brazil[language] },
+            { year: '1920', title: language === 'PT' ? 'Estabelecimento no Interior (Botucatu - SP)' : language === 'EN' ? 'Establishment in the Interior (Botucatu - SP)' : 'Insediamento nell\'Interno (Botucatu - SP)', color: 'bg-brand-green' },
+            { year: '1932', title: language === 'PT' ? 'A vida na Roça - adaptação ao país (Sítio Boa Vista - Botucatu - SP)' : language === 'EN' ? 'Farm life - adaptation to the country (Boa Vista Farm - Botucatu - SP)' : 'Vita in fattoria - adattamento al paese (Fattoria Boa Vista - Botucatu - SP)', color: 'bg-brand-dark' },
+            { year: '1931 - 1950', title: language === 'PT' ? 'Criação da Família - Filhos - (Sítio Bela Vista - Botucatu - SP)' : language === 'EN' ? 'Family Building - Children - (Bela Vista Farm - Botucatu - SP)' : 'Creazione della Famiglia - Figli - (Fattoria Bela Vista - Botucatu - SP)', color: 'bg-brand-dark' },
+            { year: '1960', title: language === 'PT' ? 'Novos Rumos - continuidade da família (São Paulo - Capital)' : language === 'EN' ? 'New Directions - family continuity (São Paulo - Capital)' : 'Nuove Direzioni - continuità familiare (San Paolo - Capitale)', color: 'bg-brand-red' },
+            { year: '2007', title: language === 'PT' ? 'Retorno às Origens (Visita à Itália - Porto Gruaro)' : language === 'EN' ? 'Return to Origins (Visit to Italy - Portogruaro)' : 'Ritorno alle Origini (Visita in Italia - Portogruaro)', color: 'bg-gray-400' },
+            { year: '2024', title: language === 'PT' ? 'Preservação do Legado Digital (Documentos e digitalização de nossa história)' : language === 'EN' ? 'Digital Legacy Preservation (Documents and digitization of our history)' : 'Preservazione dell\'Eredità Digitale (Documenti e digitalizzazione della nostra storia)', color: 'bg-brand-green' },
           ].map((item, idx) => (
             <div key={idx} className="flex gap-6 relative">
               <div className={`w-4 h-4 rounded-full ${item.color} z-10 mt-1.5 timeline-dot relative`}></div>
@@ -317,67 +375,164 @@ const Tempo = () => (
   </div>
 );
 
-const Historia = () => (
-  <div className="pt-32 pb-24">
-    <SectionHeader 
-      badge="História"
-      title="História"
-    />
-    <div className="max-w-4xl mx-auto px-4">
-      <div className="flex gap-8 mb-16 items-start">
-        <span className="font-serif text-8xl text-brand-dark leading-none mt-2">A</span>
-        <p className="text-lg text-gray-600 leading-relaxed pt-4">
-          história da família Colautto é um testemunho de coragem, resiliência e a busca incessante por um futuro melhor. Tudo começou nas terras férteis do norte da Itália.
-        </p>
+const Historia = ({ language }: { language: Language }) => {
+  const [selectedEventIndex, setSelectedEventIndex] = useState<number | null>(null);
+
+  const nextEvent = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedEventIndex !== null) {
+      setSelectedEventIndex((selectedEventIndex + 1) % HISTORY.length);
+    }
+  };
+
+  const prevEvent = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedEventIndex !== null) {
+      setSelectedEventIndex((selectedEventIndex - 1 + HISTORY.length) % HISTORY.length);
+    }
+  };
+
+  return (
+    <div className="pb-24">
+      {/* Dark Header Section */}
+      <div className="bg-brand-dark pt-24 pb-20 text-center text-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="inline-flex items-center gap-3 mb-6">
+            <div className="w-1.5 h-1.5 rounded-full bg-brand-green"></div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/60">{UI_TRANSLATIONS.historia[language]}</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-brand-yellow"></div>
+          </div>
+          <h2 className="font-serif text-6xl md:text-7xl font-normal mb-6">{UI_TRANSLATIONS.historia[language]}</h2>
+          <p className="text-white/80 italic text-lg max-w-3xl mx-auto leading-relaxed">
+            {language === 'PT' ? 'A história da família Colautto é um testemunho de coragem, resiliência e a busca incessante por um futuro melhor. Tudo começou nas terras férteis do norte da Itália.' : language === 'EN' ? 'The history of the Colautto family is a testament to courage, resilience, and the relentless search for a better future. It all began in the fertile lands of northern Italy.' : 'La storia della famiglia Colautto è una testimonianza di coraggio, resilienza e della incessante ricerca di un futuro migliore. Tutto ebbe inizio nelle fertili terre del nord Italia.'}
+          </p>
+        </div>
       </div>
 
-      <div className="space-y-12">
-        {HISTORY.map((event, idx) => (
-          <motion.div 
-            key={idx}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-white rounded-3xl p-8 md:p-12 shadow-lg flex flex-col md:flex-row gap-8 items-center"
-          >
-            <div className="w-full md:w-1/3 relative group">
-              <img 
-                src={event.image} 
-                alt={event.title} 
-                className="w-full aspect-[4/3] object-cover rounded-2xl grayscale group-hover:grayscale-0 transition-all duration-500"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center shadow-lg">
-                  <Search size={20} className="text-brand-dark" />
+      <div className="max-w-5xl mx-auto px-4 -mt-12 relative z-10">
+        <div className="space-y-20">
+          {HISTORY.map((event, idx) => (
+            <motion.div 
+              key={idx}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              onClick={() => setSelectedEventIndex(idx)}
+              className="bg-white rounded-[40px] p-6 md:p-12 shadow-2xl flex flex-col md:flex-row gap-12 items-start border border-gray-50/50 cursor-pointer group"
+            >
+              <div className="w-full md:w-[42%] relative shrink-0 overflow-hidden rounded-[24px]">
+                <img 
+                  src={event.image} 
+                  alt={event.title[language]} 
+                  className="w-full aspect-[4/3] object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 shadow-sm"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-black/20">
+                  <div className="w-16 h-16 rounded-full bg-white/95 flex items-center justify-center shadow-2xl scale-90 group-hover:scale-100 transition-transform duration-500">
+                    <Maximize2 size={32} className="text-brand-dark" />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="w-full md:w-2/3">
-              <div className="flex items-center gap-2 text-gray-400 text-xs font-bold mb-4">
-                <Clock size={14} />
-                <span>{event.year}</span>
+              <div className="w-full md:w-[58%] pt-4">
+                <div className="flex items-center gap-2 text-gray-400 text-xs font-bold mb-6 tracking-[0.2em] uppercase">
+                  <Calendar size={14} className="opacity-70" />
+                  <span>{event.year}</span>
+                </div>
+                <h3 className="font-serif text-3xl md:text-[42px] font-bold mb-8 text-brand-dark leading-[1.1] group-hover:text-brand-green transition-colors">{event.title[language]}</h3>
+                <p className="text-gray-500 text-lg md:text-xl leading-relaxed font-serif line-clamp-4">{event.description[language]}</p>
+                <div className="mt-8 flex items-center gap-2 text-brand-green font-bold text-xs uppercase tracking-widest">
+                  <span>{language === 'PT' ? 'Ver História Completa' : language === 'EN' ? 'View Full Story' : 'Vedi Storia Completa'}</span>
+                  <ChevronRight size={16} />
+                </div>
               </div>
-              <h3 className="font-serif text-2xl font-bold mb-4">{event.title}</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{event.description}</p>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          ))}
+        </div>
       </div>
-    </div>
-  </div>
-);
 
-const Arvore = () => (
+      {/* Carousel Modal */}
+      <AnimatePresence>
+        {selectedEventIndex !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-brand-dark/95 flex items-center justify-center p-4 md:p-10"
+            onClick={() => setSelectedEventIndex(null)}
+          >
+            <button 
+              className="absolute top-10 right-10 text-white/70 hover:text-white transition-colors z-[110]"
+              onClick={() => setSelectedEventIndex(null)}
+            >
+              <X size={40} />
+            </button>
+
+            <button 
+              className="absolute left-4 md:left-10 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all z-[110]"
+              onClick={prevEvent}
+            >
+              <ChevronLeft size={32} />
+            </button>
+
+            <button 
+              className="absolute right-4 md:right-10 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all z-[110]"
+              onClick={nextEvent}
+            >
+              <ChevronRight size={32} />
+            </button>
+
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="bg-white rounded-[40px] shadow-2xl overflow-hidden flex flex-col md:flex-row w-full max-h-[85vh]">
+                <div className="w-full md:w-1/2 bg-gray-100 overflow-hidden">
+                  <img 
+                    src={HISTORY[selectedEventIndex].image} 
+                    alt={HISTORY[selectedEventIndex].title[language]}
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="w-full md:w-1/2 p-8 md:p-12 overflow-y-auto bg-white scrollbar-thin scrollbar-thumb-gray-200">
+                  <div className="flex items-center gap-2 text-gray-400 text-xs font-bold mb-6 tracking-[0.2em] uppercase">
+                    <Calendar size={14} className="opacity-70" />
+                    <span>{HISTORY[selectedEventIndex].year}</span>
+                  </div>
+                  <h3 className="font-serif text-3xl md:text-4xl font-bold mb-8 text-brand-dark leading-[1.1]">
+                    {HISTORY[selectedEventIndex].title[language]}
+                  </h3>
+                  <div className="w-12 h-1 bg-brand-green mb-8 rounded-full"></div>
+                  <p className="text-gray-600 text-lg md:text-xl leading-relaxed font-serif">
+                    {HISTORY[selectedEventIndex].description[language]}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="mt-6 text-white/50 text-xs font-bold tracking-widest">
+                {selectedEventIndex + 1} / {HISTORY.length}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const Arvore = ({ language }: { language: Language }) => (
   <div className="pt-32 pb-24 min-h-screen">
     <SectionHeader 
-      title="Árvore"
+      title={UI_TRANSLATIONS.arvore[language]}
     />
     <div className="max-w-7xl mx-auto px-4">
       <div className="bg-white rounded-[40px] shadow-2xl overflow-hidden relative min-h-[800px] flex flex-col">
         <div className="p-8 border-b border-gray-100 flex justify-center">
           <div className="px-6 py-2 bg-gray-50 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400">
-            Selecione um membro na árvore.
+            {UI_TRANSLATIONS.select_member_tree[language]}
           </div>
         </div>
         
@@ -391,7 +546,7 @@ const Arvore = () => (
                   <img src="https://picsum.photos/seed/p1/100/100?grayscale" alt="Patriarcas" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                 </div>
                 <h4 className="text-[10px] font-bold leading-tight">Ângelo Colautto x Luigia Licchin</h4>
-                <p className="text-[8px] text-gray-400 uppercase font-bold mt-1">PATRIARCAS</p>
+                <p className="text-[8px] text-gray-400 uppercase font-bold mt-1">{UI_TRANSLATIONS.patriarchs[language]}</p>
               </div>
               <div className="absolute top-full left-1/2 w-px h-16 bg-gray-200 -translate-x-1/2"></div>
             </div>
@@ -400,12 +555,12 @@ const Arvore = () => (
             <div className="flex gap-12 relative">
               <div className="absolute top-0 left-0 right-0 h-px bg-gray-200 -translate-y-8"></div>
               {[
-                { name: 'Antonio Colautto', role: 'FILHO' },
-                { name: 'Amabilie Colautto', role: 'FILHA' },
-                { name: 'Angelina Colautto', role: 'FILHA' },
-                { name: 'Josefina Colautto', role: 'FILHA' },
-                { name: 'Ângelo Colautto Filho', role: 'FILHO' },
-                { name: 'Jose Colautto', role: 'FILHO' },
+                { name: 'Antonio Colautto', role: language === 'PT' ? 'FILHO' : language === 'EN' ? 'SON' : 'FIGLIO' },
+                { name: 'Amabilie Colautto', role: language === 'PT' ? 'FILHA' : language === 'EN' ? 'DAUGHTER' : 'FIGLIA' },
+                { name: 'Angelina Colautto', role: language === 'PT' ? 'FILHA' : language === 'EN' ? 'DAUGHTER' : 'FIGLIA' },
+                { name: 'Josefina Colautto', role: language === 'PT' ? 'FILHA' : language === 'EN' ? 'DAUGHTER' : 'FIGLIA' },
+                { name: 'Ângelo Colautto Filho', role: language === 'PT' ? 'FILHO' : language === 'EN' ? 'SON' : 'FIGLIO' },
+                { name: 'Jose Colautto', role: language === 'PT' ? 'FILHO' : language === 'EN' ? 'SON' : 'FIGLIO' },
               ].map((m, i) => (
                 <div key={i} className="relative flex flex-col items-center">
                   <div className="absolute top-0 left-1/2 w-px h-8 bg-gray-200 -translate-x-1/2 -translate-y-8"></div>
@@ -427,15 +582,15 @@ const Arvore = () => (
             <div className="flex gap-8 relative ml-[600px]">
                <div className="absolute top-0 left-0 right-0 h-px bg-gray-200 -translate-y-8"></div>
                {[
-                { name: 'Nelson Colautto', role: 'NETO' },
-                { name: 'Leonilda Colautto', role: 'NETA' },
-                { name: 'Anaite Colautto', role: 'NETA' },
-                { name: 'Irma Colautto', role: 'NETA' },
-                { name: 'Geraldo Colautto', role: 'NETO' },
-                { name: 'Angelino Colautto', role: 'NETO' },
-                { name: 'Maria Augusta Colautto', role: 'NETA' },
-                { name: 'Roberto Colautto', role: 'NETO' },
-                { name: 'José Celio Colautto', role: 'NETO' },
+                { name: 'Nelson Colautto', role: language === 'PT' ? 'NETO' : language === 'EN' ? 'GRANDSON' : 'NIPOTE' },
+                { name: 'Leonilda Colautto', role: language === 'PT' ? 'NETA' : language === 'EN' ? 'GRANDDAUGHTER' : 'NIPOTE' },
+                { name: 'Anaite Colautto', role: language === 'PT' ? 'NETA' : language === 'EN' ? 'GRANDDAUGHTER' : 'NIPOTE' },
+                { name: 'Irma Colautto', role: language === 'PT' ? 'NETA' : language === 'EN' ? 'GRANDDAUGHTER' : 'NIPOTE' },
+                { name: 'Geraldo Colautto', role: language === 'PT' ? 'NETO' : language === 'EN' ? 'GRANDSON' : 'NIPOTE' },
+                { name: 'Angelino Colautto', role: language === 'PT' ? 'NETO' : language === 'EN' ? 'GRANDSON' : 'NIPOTE' },
+                { name: 'Maria Augusta Colautto', role: language === 'PT' ? 'NETA' : language === 'EN' ? 'GRANDDAUGHTER' : 'NIPOTE' },
+                { name: 'Roberto Colautto', role: language === 'PT' ? 'NETO' : language === 'EN' ? 'GRANDSON' : 'NIPOTE' },
+                { name: 'José Celio Colautto', role: language === 'PT' ? 'NETO' : language === 'EN' ? 'GRANDSON' : 'NIPOTE' },
               ].map((m, i) => (
                 <div key={i} className="relative flex flex-col items-center">
                   <div className="absolute top-0 left-1/2 w-px h-8 bg-gray-200 -translate-x-1/2 -translate-y-8"></div>
@@ -457,9 +612,9 @@ const Arvore = () => (
             <div className="flex gap-8 relative ml-[850px]">
                <div className="absolute top-0 left-0 right-0 h-px bg-gray-200 -translate-y-8"></div>
                {[
-                { name: 'Débora Colautto', role: 'BISNETA' },
-                { name: 'Luiz Eduardo Colautto', role: 'BISNETO' },
-                { name: 'Jonatas Jose Colautto', role: 'BISNETO' },
+                { name: 'Débora Colautto', role: language === 'PT' ? 'BISNETA' : language === 'EN' ? 'GREAT-GRANDDAUGHTER' : 'BISNIPOTE' },
+                { name: 'Luiz Eduardo Colautto', role: language === 'PT' ? 'BISNETO' : language === 'EN' ? 'GREAT-GRANDSON' : 'BISNIPOTE' },
+                { name: 'Jonatas Jose Colautto', role: language === 'PT' ? 'BISNETO' : language === 'EN' ? 'GREAT-GRANDSON' : 'BISNIPOTE' },
               ].map((m, i) => (
                 <div key={i} className="relative flex flex-col items-center">
                   <div className="absolute top-0 left-1/2 w-px h-8 bg-gray-200 -translate-x-1/2 -translate-y-8"></div>
@@ -495,11 +650,11 @@ const Arvore = () => (
   </div>
 );
 
-const Membros = () => (
+const Membros = ({ language }: { language: Language }) => (
   <div className="pt-32 pb-24">
     <SectionHeader 
-      title="Membros da Família"
-      subtitle="Conheça as pessoas que fazem parte da nossa história."
+      title={UI_TRANSLATIONS.family_members_title[language]}
+      subtitle={UI_TRANSLATIONS.family_members_subtitle[language]}
     />
     <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
       {MEMBERS.map((member) => (
@@ -526,18 +681,18 @@ const Membros = () => (
           <div className="flex-1">
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-bold text-sm leading-tight">{member.name}</h3>
-              {member.tags?.includes('Raízes') && (
-                <span className="px-2 py-0.5 bg-gray-100 text-[8px] font-bold rounded uppercase tracking-widest text-gray-500">Raízes</span>
+              {member.tags?.[language]?.includes(UI_TRANSLATIONS.roots[language]) && (
+                <span className="px-2 py-0.5 bg-gray-100 text-[8px] font-bold rounded uppercase tracking-widest text-gray-500">{UI_TRANSLATIONS.roots[language]}</span>
               )}
             </div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">{member.role}</p>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">{member.role[language]}</p>
             {member.spouse && (
               <div className="flex items-center gap-2 px-3 py-2 bg-red-50/50 rounded-xl mb-4">
                 <Heart size={12} className="text-brand-red fill-brand-red" />
-                <span className="text-[10px] font-medium text-brand-red">Cônjuge: {member.spouse}</span>
+                <span className="text-[10px] font-medium text-brand-red">{UI_TRANSLATIONS.spouse[language]}: {member.spouse}</span>
               </div>
             )}
-            {member.bio && <p className="text-[10px] text-gray-500 italic leading-relaxed">{member.bio}</p>}
+            {member.bio?.[language] && <p className="text-[10px] text-gray-500 italic leading-relaxed">{member.bio[language]}</p>}
           </div>
         </motion.div>
       ))}
@@ -545,58 +700,91 @@ const Membros = () => (
   </div>
 );
 
-const Galeria = () => {
+const Galeria = ({ language }: { language: Language }) => {
   const [filter, setFilter] = useState<string>('TODOS');
-  const categories = ['TODOS', 'LOCAL', 'PESSOAS', 'EVENTOS', 'DOCUMENTOS'];
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+  const categories = [
+    { id: 'TODOS', label: UI_TRANSLATIONS.all[language] },
+    { id: 'LOCAL', label: UI_TRANSLATIONS.local[language] },
+    { id: 'PESSOAS', label: UI_TRANSLATIONS.people[language] },
+    { id: 'EVENTOS', label: UI_TRANSLATIONS.events[language] },
+    { id: 'DOCUMENTOS', label: UI_TRANSLATIONS.documents[language] }
+  ];
 
   const filteredItems = filter === 'TODOS' 
     ? GALLERY 
     : GALLERY.filter(item => item.category.toUpperCase() === filter);
 
+  const openModal = (index: number) => {
+    setSelectedImageIndex(index);
+  };
+
+  const closeModal = () => {
+    setSelectedImageIndex(null);
+  };
+
+  const nextImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedImageIndex !== null) {
+      setSelectedImageIndex((selectedImageIndex + 1) % filteredItems.length);
+    }
+  };
+
+  const prevImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedImageIndex !== null) {
+      setSelectedImageIndex((selectedImageIndex - 1 + filteredItems.length) % filteredItems.length);
+    }
+  };
+
   return (
     <div className="pt-32 pb-24">
       <SectionHeader 
-        title="Galeria de Fotos"
-        subtitle="Momentos eternizados através das gerações da família Colautto."
+        title={UI_TRANSLATIONS.gallery_title[language]}
+        subtitle={UI_TRANSLATIONS.gallery_subtitle[language]}
       />
       
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex flex-wrap justify-center gap-4 mb-16">
           {categories.map((cat) => (
             <button
-              key={cat}
-              onClick={() => setFilter(cat)}
-              className={`px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${filter === cat ? 'bg-brand-dark text-white shadow-lg' : 'bg-white text-gray-400 hover:bg-gray-50 border border-gray-100'}`}
+              key={cat.id}
+              onClick={() => {
+                setFilter(cat.id);
+                setSelectedImageIndex(null);
+              }}
+              className={`px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${filter === cat.id ? 'bg-brand-dark text-white shadow-lg' : 'bg-white text-gray-400 hover:bg-gray-50 border border-gray-100'}`}
             >
-              {cat}
+              {cat.label}
             </button>
           ))}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
-          {filteredItems.map((item) => (
+          {filteredItems.map((item, index) => (
             <motion.div 
               key={item.id}
               layout
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="bg-white rounded-2xl overflow-hidden shadow-md group"
+              className="bg-white rounded-2xl overflow-hidden shadow-md group cursor-pointer"
+              onClick={() => openModal(index)}
             >
               <div className="relative aspect-[4/5] overflow-hidden">
                 <img 
                   src={item.image} 
-                  alt={item.title} 
+                  alt={item.title[language]} 
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-brand-dark/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center shadow-xl">
-                    <Search size={20} className="text-brand-dark" />
+                    <Maximize2 size={20} className="text-brand-dark" />
                   </div>
                 </div>
               </div>
               <div className="p-4 text-center">
-                <h4 className="font-bold text-xs mb-1 truncate">{item.title}</h4>
+                <h4 className="font-bold text-xs mb-1 line-clamp-2 h-8 flex items-center justify-center">{item.title[language]}</h4>
                 <p className="text-[10px] text-gray-400 font-medium">{item.year}</p>
               </div>
             </motion.div>
@@ -605,53 +793,214 @@ const Galeria = () => {
 
         <div className="mt-16 flex justify-center">
           <button className="px-10 py-4 bg-brand-dark text-white rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-brand-dark/90 transition-colors shadow-xl">
-            Carregar Mais
+            {UI_TRANSLATIONS.load_more[language]}
           </button>
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      <AnimatePresence>
+        {selectedImageIndex !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-brand-dark/95 flex items-center justify-center p-4 md:p-10"
+            onClick={closeModal}
+          >
+            <button 
+              className="absolute top-10 right-10 text-white/70 hover:text-white transition-colors z-[110]"
+              onClick={closeModal}
+            >
+              <X size={40} />
+            </button>
+
+            <button 
+              className="absolute left-4 md:left-10 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all z-[110]"
+              onClick={prevImage}
+            >
+              <ChevronLeft size={32} />
+            </button>
+
+            <button 
+              className="absolute right-4 md:right-10 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all z-[110]"
+              onClick={nextImage}
+            >
+              <ChevronRight size={32} />
+            </button>
+
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative max-w-4xl w-full max-h-[90vh] flex flex-col items-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="bg-white p-2 rounded-2xl shadow-2xl flex flex-col max-h-full overflow-hidden">
+                <div className="flex-1 overflow-hidden flex items-center justify-center bg-gray-50 rounded-xl">
+                  <img 
+                    src={filteredItems[selectedImageIndex].image} 
+                    alt={filteredItems[selectedImageIndex].title[language]}
+                    className="max-h-full w-auto object-contain"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="p-4 md:p-6 text-center shrink-0">
+                  <span className="inline-block px-3 py-1 bg-gray-100 rounded-lg text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-widest">
+                    {filteredItems[selectedImageIndex].category}
+                  </span>
+                  <h3 className="font-serif text-xl md:text-2xl font-bold text-brand-dark mb-1 leading-tight">
+                    {filteredItems[selectedImageIndex].title[language]}
+                  </h3>
+                  <p className="text-gray-400 font-medium text-sm">{filteredItems[selectedImageIndex].year}</p>
+                </div>
+              </div>
+              
+              <div className="mt-6 text-white/50 text-xs font-bold tracking-widest">
+                {selectedImageIndex + 1} / {filteredItems.length}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
-const Encontros = () => (
-  <div className="pt-32 pb-24">
-    <SectionHeader 
-      badge="Encontros"
-      title="Encontros da Família"
-      subtitle="Momentos de união e celebração da nossa história."
-    />
-    <div className="max-w-4xl mx-auto px-4">
-      {MEETINGS.map((meeting) => (
-        <motion.div 
-          key={meeting.id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-[40px] shadow-2xl overflow-hidden flex flex-col md:flex-row"
-        >
-          <div className="p-12 md:w-1/2">
-            <div className="inline-block px-3 py-1 bg-gray-100 rounded-lg text-[10px] font-bold text-gray-500 mb-6">{meeting.date}</div>
-            <h3 className="font-serif text-3xl font-bold mb-6">{meeting.title}</h3>
-            <p className="text-gray-500 text-sm leading-relaxed mb-8">{meeting.description}</p>
-          </div>
-          <div className="md:w-1/2 p-8">
-            <img 
-              src={meeting.image} 
-              alt={meeting.title} 
-              className="w-full h-full object-cover rounded-3xl grayscale"
-              referrerPolicy="no-referrer"
-            />
-          </div>
-        </motion.div>
-      ))}
-    </div>
-  </div>
-);
+const Biografias = ({ language }: { language: Language }) => {
+  const [selectedBiographyIndex, setSelectedBiographyIndex] = useState<number | null>(null);
 
-const Contato = () => (
+  return (
+    <div className="pb-24">
+      {/* Dark Header Section */}
+      <div className="bg-brand-dark pt-24 pb-20 text-center text-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="inline-flex items-center gap-3 mb-6">
+            <div className="w-1.5 h-1.5 rounded-full bg-brand-green"></div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/60">{UI_TRANSLATIONS.biografias[language]}</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-brand-yellow"></div>
+          </div>
+          <h2 className="font-serif text-6xl md:text-7xl font-bold mb-6">{UI_TRANSLATIONS.biografias[language]}</h2>
+          <p className="text-white/60 italic text-lg">{UI_TRANSLATIONS.biographies_desc[language]}</p>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 -mt-14 relative z-10">
+        <div className="space-y-12">
+          {MEETINGS.map((meeting, idx) => (
+          <motion.div 
+            key={meeting.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-[40px] shadow-2xl overflow-hidden flex flex-col md:flex-row items-center p-8 md:p-10 gap-8 cursor-pointer group"
+            onClick={() => setSelectedBiographyIndex(idx)}
+          >
+            <div className="w-full md:w-[35%] shrink-0 relative overflow-hidden rounded-2xl">
+              <img 
+                src={meeting.image} 
+                alt={meeting.title[language]} 
+                className="w-full aspect-[4/3] object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 shadow-md"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-xl">
+                  <Maximize2 size={24} className="text-brand-dark" />
+                </div>
+              </div>
+            </div>
+            <div className="flex-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-lg text-[11px] font-bold text-gray-400 mb-6 border border-gray-100">
+                <Calendar size={14} className="opacity-70" />
+                <span>{meeting.date}</span>
+              </div>
+              <h3 className="font-serif text-2xl md:text-3xl font-bold mb-6 text-brand-dark leading-tight group-hover:text-brand-green transition-colors">{meeting.title[language]}</h3>
+              <p className="text-gray-500 text-[14px] leading-relaxed mb-8 font-serif line-clamp-3">
+                {meeting.description[language]}
+              </p>
+              <div className="flex items-center justify-between">
+                {meeting.author && (
+                  <div className="flex items-center gap-2 text-[11px] text-gray-400 font-medium italic">
+                    <Users size={14} className="opacity-70" />
+                    <span>Por : {meeting.author[language]}</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-2 text-brand-green font-bold text-[10px] uppercase tracking-widest">
+                  <span>{language === 'PT' ? 'Ler Relato Completo' : language === 'EN' ? 'Read Full Story' : 'Leggi Storia Completa'}</span>
+                  <ChevronRight size={14} />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+        </div>
+      </div>
+
+      {/* Biography Modal */}
+      <AnimatePresence>
+        {selectedBiographyIndex !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-brand-dark/95 flex items-center justify-center p-4 md:p-10"
+            onClick={() => setSelectedBiographyIndex(null)}
+          >
+            <button 
+              className="absolute top-10 right-10 text-white/70 hover:text-white transition-colors z-[110]"
+              onClick={() => setSelectedBiographyIndex(null)}
+            >
+              <X size={40} />
+            </button>
+
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="bg-white rounded-[40px] shadow-2xl overflow-hidden flex flex-col md:flex-row w-full max-h-[85vh]">
+                <div className="w-full md:w-1/2 bg-gray-100 overflow-hidden">
+                  <img 
+                    src={MEETINGS[selectedBiographyIndex].image} 
+                    alt={MEETINGS[selectedBiographyIndex].title[language]}
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="w-full md:w-1/2 p-8 md:p-12 overflow-y-auto bg-white scrollbar-thin scrollbar-thumb-gray-200">
+                  <div className="flex items-center gap-2 text-gray-400 text-xs font-bold mb-6 tracking-[0.2em] uppercase">
+                    <Calendar size={14} className="opacity-70" />
+                    <span>{MEETINGS[selectedBiographyIndex].date}</span>
+                  </div>
+                  <h3 className="font-serif text-3xl md:text-4xl font-bold mb-8 text-brand-dark leading-[1.1]">
+                    {MEETINGS[selectedBiographyIndex].title[language]}
+                  </h3>
+                  <div className="w-12 h-1 bg-brand-green mb-8 rounded-full"></div>
+                  <div className="text-gray-600 text-lg leading-relaxed font-serif whitespace-pre-line">
+                    {MEETINGS[selectedBiographyIndex].description[language]}
+                  </div>
+                  {MEETINGS[selectedBiographyIndex].author && (
+                    <div className="mt-12 pt-8 border-t border-gray-100 flex items-center gap-3 text-gray-400 italic">
+                      <Users size={18} className="opacity-70" />
+                      <span className="text-sm">Relato de: {MEETINGS[selectedBiographyIndex].author[language]}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const Contato = ({ language }: { language: Language }) => (
   <div className="pt-32 pb-24">
     <SectionHeader 
-      title="Entre em Contato"
-      subtitle="Para dúvidas, sugestões ou compartilhamento de materiais históricos."
+      title={UI_TRANSLATIONS.contact_title[language]}
+      subtitle={UI_TRANSLATIONS.contact_subtitle[language]}
     />
     <div className="max-w-7xl mx-auto px-4">
       {/* Hero-like contact background */}
@@ -663,8 +1012,8 @@ const Contato = () => (
           <div className="w-1/4 bg-[#1A1A10]"></div>
         </div>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <h2 className="font-serif text-6xl font-bold text-white mb-6">Entre em Contato</h2>
-          <p className="text-gray-400 italic max-w-2xl">Para dúvidas, sugestões ou compartilhamento de materiais históricos.</p>
+          <h2 className="font-serif text-6xl font-bold text-white mb-6">{UI_TRANSLATIONS.contact_title[language]}</h2>
+          <p className="text-gray-400 italic max-w-2xl">{UI_TRANSLATIONS.contact_subtitle[language]}</p>
         </div>
       </div>
 
@@ -675,9 +1024,9 @@ const Contato = () => (
               <MapPin size={24} />
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-1">Localização</p>
-              <h4 className="font-bold text-xl">São Paulo - SP</h4>
-              <p className="text-gray-400 text-sm">Brasil</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-1">{UI_TRANSLATIONS.location[language]}</p>
+              <h4 className="font-bold text-xl">Botucatu, São Paulo - SP</h4>
+              <p className="text-gray-400 text-sm">{UI_TRANSLATIONS.brazil[language]}</p>
             </div>
           </div>
           <div className="flex items-center gap-6">
@@ -685,7 +1034,7 @@ const Contato = () => (
               <Mail size={24} />
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-1">E-mail Oficial</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-1">{UI_TRANSLATIONS.official_email[language]}</p>
               <h4 className="font-bold text-xl underline decoration-brand-green decoration-2 underline-offset-4">familia@colautto.com</h4>
             </div>
           </div>
@@ -694,8 +1043,8 @@ const Contato = () => (
               <Globe size={24} />
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-1">Origens</p>
-              <h4 className="font-bold text-xl">Veneto, Itália</h4>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-1">{UI_TRANSLATIONS.origins[language]}</p>
+              <h4 className="font-bold text-xl">Portogruaro, Veneto - {UI_TRANSLATIONS.italy[language]}</h4>
             </div>
           </div>
         </div>
@@ -704,9 +1053,9 @@ const Contato = () => (
           <div className="absolute top-0 right-0 w-32 h-32 bg-red-50/50 rounded-full -mr-16 -mt-16 border border-red-100 flex items-center justify-center p-8">
              <Heart size={48} className="text-red-100 fill-red-50" />
           </div>
-          <h3 className="font-serif text-3xl font-bold mb-8">Nosso Legado</h3>
+          <h3 className="font-serif text-3xl font-bold mb-8">{UI_TRANSLATIONS.our_legacy[language]}</h3>
           <p className="text-gray-500 text-sm leading-relaxed mb-8">
-            O arquivo da Família Colautto é mantido por voluntários dedicados à preservação da nossa história. Se você possui fotos antigas, documentos de imigração ou histórias que merecem ser contadas, por favor, entre em contato conosco.
+            {UI_TRANSLATIONS.legacy_desc[language]}
           </p>
           <div className="flex gap-1">
             <div className="w-8 h-1 bg-brand-green rounded-full"></div>
@@ -721,6 +1070,7 @@ const Contato = () => (
 
 export default function App() {
   const [section, setSection] = useState<Section>('inicio');
+  const [language, setLanguage] = useState<Language>('PT');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -728,15 +1078,15 @@ export default function App() {
 
   const renderSection = () => {
     switch (section) {
-      case 'inicio': return <Inicio setSection={setSection} />;
-      case 'tempo': return <Tempo />;
-      case 'historia': return <Historia />;
-      case 'arvore': return <Arvore />;
-      case 'membros': return <Membros />;
-      case 'galeria': return <Galeria />;
-      case 'encontros': return <Encontros />;
-      case 'contato': return <Contato />;
-      default: return <Inicio setSection={setSection} />;
+      case 'inicio': return <Inicio setSection={setSection} language={language} />;
+      case 'tempo': return <Tempo language={language} />;
+      case 'historia': return <Historia language={language} />;
+      case 'arvore': return <Arvore language={language} />;
+      case 'membros': return <Membros language={language} />;
+      case 'galeria': return <Galeria language={language} />;
+      case 'biografias': return <Biografias language={language} />;
+      case 'contato': return <Contato language={language} />;
+      default: return <Inicio setSection={setSection} language={language} />;
     }
   };
 
@@ -749,7 +1099,7 @@ export default function App() {
         <div className="flex-1 bg-brand-yellow"></div>
       </div>
 
-      <Navbar activeSection={section} setSection={setSection} />
+      <Navbar activeSection={section} setSection={setSection} language={language} setLanguage={setLanguage} />
       
       <main className="flex-1">
         <AnimatePresence mode="wait">
@@ -772,7 +1122,7 @@ export default function App() {
         <div className="flex-1 bg-brand-yellow"></div>
       </div>
       
-      <Footer />
+      <Footer language={language} />
     </div>
   );
 }

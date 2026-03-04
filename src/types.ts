@@ -1,25 +1,31 @@
+export type Language = 'PT' | 'EN' | 'ITA';
+
+export type Localized<T> = {
+  [key in Language]: T;
+};
+
 export interface Member {
   id: string;
   name: string;
-  role: string;
+  role: Localized<string>;
   spouse?: string;
   photo?: string;
-  bio?: string;
+  bio?: Localized<string>;
   level: 'patriarcas' | 'filho' | 'filha' | 'neto' | 'neta' | 'bisneto' | 'bisneta';
-  tags?: string[];
+  tags?: Localized<string[]>;
 }
 
 export interface HistoryEvent {
   year: number;
-  title: string;
-  location: string;
-  description: string;
+  title: Localized<string>;
+  location: Localized<string>;
+  description: Localized<string>;
   image: string;
 }
 
 export interface GalleryItem {
   id: string;
-  title: string;
+  title: Localized<string>;
   year: string;
   category: 'local' | 'pessoas' | 'eventos' | 'documentos';
   image: string;
@@ -27,10 +33,11 @@ export interface GalleryItem {
 
 export interface Meeting {
   id: string;
-  title: string;
+  title: Localized<string>;
   date: string;
-  description: string;
+  description: Localized<string>;
   image: string;
+  author?: Localized<string>;
 }
 
-export type Section = 'inicio' | 'tempo' | 'historia' | 'arvore' | 'membros' | 'galeria' | 'encontros' | 'contato';
+export type Section = 'inicio' | 'tempo' | 'historia' | 'arvore' | 'membros' | 'galeria' | 'biografias' | 'contato';
